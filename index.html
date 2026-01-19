@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">loadProgress();
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Blagie Lands</title>
@@ -349,7 +349,6 @@
     left: 0;
     background: white;
 }
-
     .hint-panel {
       font-size: 11px;
       opacity: 0.8;
@@ -512,54 +511,14 @@
       updateUI();
     };
 
-    upgradeBtn.onclick = () => { saveProgress();
-      bless -= 20;
-      castleLevel++;
-      log(`Castle upgraded! New level: ${castleLevel}.`);
-      updateUI();
-    };
-
+upgradeBtn.onclick = () => {
+    bless -= 20;
+    castleLevel++;
+    log(`Castle upgraded! New level: ${castleLevel}.`);
     updateUI();
-<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyDw9XjJKPoeLMqw7LvGuG7clYHy1IzeZNw",
-    authDomain: "blagie-test.firebaseapp.com",
-    projectId: "blagie-test",
-    storageBucket: "blagie-test.firebasestorage.app",
-    messagingSenderId: "625731623902",
-    appId: "1:625731623902:web:ec7a08784473e10d265b4f"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-  function saveProgress() {
-  db.collection("users").doc("natalya").set({
-    castleLevel: castleLevel,
-    bless: bless
-  }).then(() => {
-    console.log("✅ Прогресс сохранён в Firebase.");
-  }).catch((error) => {
-    console.error("❌ Ошибка при сохранении:", error);
-  });
-} function loadProgress() {
-  db.collection("users").doc("natalya").get().then((doc) => {
-    if (doc.exists) {
-      const data = doc.data();
-      castleLevel = data.castleLevel;
-      bless = data.bless;
-      updateUI();
-      console.log("✅ Прогресс загружен из Firebase.");
-    } else {
-      console.log("ℹ️ Прогресс не найден — начинаем с нуля.");
-    }
-  }).catch((error) => {
-    console.error("❌ Ошибка при загрузке:", error);
-  });
-}
-</script>
-
+    saveProgress();
+};
+    updateUI();
+  </script>
 </body>
 </html>
