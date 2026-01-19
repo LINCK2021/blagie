@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+loadProgress();
 <head>
   <meta charset="UTF-8">
   <title>Blagie Lands</title>
@@ -512,7 +513,7 @@
       updateUI();
     };
 
-    upgradeBtn.onclick = () => {
+    upgradeBtn.onclick = () => { saveProgress();
       bless -= 20;
       castleLevel++;
       log(`Castle upgraded! New level: ${castleLevel}.`);
@@ -520,28 +521,46 @@
     };
 
     updateUI();
-  </script> <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js"></script>
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+<script>
   const firebaseConfig = {
     apiKey: "AIzaSyDw9XjJKPoeLMqw7LvGuG7clYHy1IzeZNw",
     authDomain: "blagie-test.firebaseapp.com",
     projectId: "blagie-test",
     storageBucket: "blagie-test.firebasestorage.app",
     messagingSenderId: "625731623902",
-    appId: "1:625731623902:web:ec7a08784473e10d265b4f",
-    measurementId: "G-5BD3V6EWGX"
+    appId: "1:625731623902:web:ec7a08784473e10d265b4f"
   };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  function saveProgress() {
+  db.collection("users").doc("natalya").set({
+    castleLevel: castleLevel,
+    bless: bless
+  }).then(() => {
+    console.log("✅ Прогресс сохранён в Firebase.");
+  }).catch((error) => {
+    console.error("❌ Ошибка при сохранении:", error);
+  });
+} function loadProgress() {
+  db.collection("users").doc("natalya").get().then((doc) => {
+    if (doc.exists) {
+      const data = doc.data();
+      castleLevel = data.castleLevel;
+      bless = data.bless;
+      updateUI();
+      console.log("✅ Прогресс загружен из Firebase.");
+    } else {
+      console.log("ℹ️ Прогресс не найден — начинаем с нуля.");
+    }
+  }).catch((error) => {
+    console.error("❌ Ошибка при загрузке:", error);
+  });
+}
 </script>
+
 </body>
 </html>
