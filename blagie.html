@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blagie Lands</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #2b3b5a 0, #05060a 55%, #020308 100%);
+      color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .game-wrapper {
+      width: 960px;
+      max-width: 100%;
+      padding: 20px;
+    }
+    .game-frame {
+      background: linear-gradient(145deg, #141820, #090b10);
+      border-radius: 14px;
+      border: 1px solid #3b4258;
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+    }
+    .header {
+      grid-column: 1 / 3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(0,0,0,0.2));
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .title-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .crest {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ffe9a3 0, #f4c15a 35%, #8b4a1f 100%);
+      border: 2px solid #f7e6b5;
+      box-shadow: 0 0 10px rgba(255,220,140,0.7);
+      position: relative;
+    }
+    .crest::after {
+      content: "";
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.4);
+    }
+    .game-title {
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f7e6b5;
+      text-shadow: 0 0 8px rgba(0,0,0,0.8);
+    }
+    .header-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 12px;
+      opacity: 0.85;
+    }
+    .badge {
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.12), rgba(0,0,0,0.6));
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .main-panel {
+      grid-row: 2 / 4;
+      grid-column: 1 / 2;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+      background: radial-gradient(circle at top, #28344a 0, #0b0f18 55%, #05060a 100%);
+      position: relative;
+    }
+    .castle-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 0, rgba(255,255,255,0.12) 0, transparent 55%),
+        linear-gradient(to top, rgba(0,0,0,0.9), transparent 40%),
+        linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 40%);
+      pointer-events: none;
+    }
+    .castle-layer {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      padding-bottom: 40px;
+      pointer-events: none;
+    }
+    .castle {
+      width: 260px;
+      height: 160px;
+      border-radius: 12px 12px 4px 4px;
+      background:
+        linear-gradient(180deg, #d7d7e0 0, #a9a9b5 40%, #6b6b7a 100%);
+      box-shadow:
+        0 0 25px rgba(0,0,0,0.9),
+        0 0 40px rgba(255,255,255,0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .castle::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 110px;
+      width: 120px;
+      height: 70px;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(180deg, #f4f4fb 0, #b8b8c7 60%, #7a7a8a 100%);
+      box-shadow: 0 0 18px rgba(0,0,0,0.7);
+    }
+    .castle::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 150px;
+      width: 40px;
+      height: 40px;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, #ffe9b0 0, #f0c46a 60%, #b37a2e 100%);
+      box-shadow: 0 0 14px rgba(0,0,0,0.8);
+    }
+    .castle-tower {
+      position: absolute;
+      bottom: 70px;
+      left: 18px;
+      width: 60px;
+      height: 80px;
+      border-radius: 8px 8px 0 0;
+      background: linear-gradient(180deg, #f0f0f8 0, #b8b8c7 60%, #7a7a8a 100%);
+      box-shadow: 0 0 12px rgba(0,0,0,0.7);
+    }
+    .castle-tower.right {
+      left: auto;
+      right: 18px;
+    }
+    .castle-gate {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 70px;
+      border-radius: 70px 70px 0 0;
+      background: radial-gradient(circle at top, #f7e6b5 0, #b37a2e 40%, #4a2b12 100%);
+      box-shadow: 0 0 12px rgba(0,0,0,0.9);
+    }
+    .castle-gate::after {
+      content: "";
+      position: absolute;
+      inset: 10px 14px 0 14px;
+      border-radius: 60px 60px 0 0;
+      background: linear-gradient(180deg, #3b2410 0, #1a0f07 100%);
+    }
+    .castle-flags {
+      position: absolute;
+      bottom: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 40px;
+    }
+    .flag {
+      width: 2px;
+      height: 40px;
+      background: #f5f5f5;
+      position: relative;
+    }
+    .flag::after {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 4px;
+      width: 18px;
+      height: 12px;
+      background: linear-gradient(135deg, #f7e6b5, #f0c46a, #b37a2e);
+      clip-path: polygon(0 0, 100% 0, 70% 50%, 100% 100%, 0 100%);
+      box-shadow: 0 0 6px rgba(0,0,0,0.7);
+    }
+
+    .overlay-ui {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 12px;
+    }
+
+    .top-stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+    }
+    .stat-pill {
+      flex: 1;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.16), rgba(0,0,0,0.7));
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .stat-label {
+      opacity: 0.8;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .stat-value {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .resource-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .resource-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 20%, #ffe9b0, #f0c46a, #b37a2e);
+      box-shadow: 0 0 8px rgba(0,0,0,0.8);
+    }
+
+    .bottom-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .btn-main {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.16), rgba(0,0,0,0.9));
+      color: #f5f5f5;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease;
+    }
+    .btn-main span.label {
+      font-weight: 600;
+    }
+    .btn-main span.sub {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+    .btn-main:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 0 10px rgba(0,0,0,0.7);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.22), rgba(0,0,0,0.9));
+    }
+    .btn-main:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    .btn-main:disabled {
+      opacity: 0.4;
+      cursor: default;
+      box-shadow: none;
+    }
+    .btn-upgrade {
+      grid-column: 1 / 4;
+      background: radial-gradient(circle at top, #f0c46a, #b37a2e, #4a2b12);
+      border-color: #f7e6b5;
+      color: #1a0f07;
+      text-shadow: 0 0 4px rgba(255,255,255,0.4);
+    }
+    .btn-upgrade:disabled {
+      background: radial-gradient(circle at top, #7a6a4a, #3b2a16, #120a04);
+      color: #c0b8a0;
+      text-shadow: none;
+    }
+
+    .side-panel {
+      grid-row: 2 / 4;
+      grid-column: 2 / 3;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .log-panel {
+      flex: 1;
+      border-radius: 10px;
+      background: radial-gradient(circle at top, #181b24, #05060a);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+    .log-header {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+#log {
+    width: 100%;
+    height: 150px;
+    overflow-y: scroll;
+    border-top: 2px solid #ccc;
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: white;
+}
+
+    .hint-panel {
+      font-size: 11px;
+      opacity: 0.8;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), rgba(0,0,0,0.9));
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .hint-panel strong {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <div class="game-frame">
+      <div class="header">
+        <div class="title-block">
+          <div class="crest"></div>
+          <div class="game-title">Blagie Lands</div>
+        </div>
+        <div class="header-right">
+          <div class="badge">Prototype</div>
+          <div>Local build · v0.1</div>
+        </div>
+      </div>
+
+      <div class="main-panel">
+        <div class="castle-bg"></div>
+        <div class="castle-layer">
+          <div class="castle">
+            <div class="castle-tower"></div>
+            <div class="castle-tower right"></div>
+            <div class="castle-gate"></div>
+            <div class="castle-flags">
+              <div class="flag"></div>
+              <div class="flag"></div>
+            </div>
+          </div>
+        </div>
+        <div class="overlay-ui">
+          <div>
+            <div class="top-stats">
+              <div class="stat-pill">
+                <div>
+                  <div class="stat-label">Castle level</div>
+                  <div class="stat-value" id="castleLevel">1</div>
+                </div>
+              </div>
+              <div class="stat-pill">
+                <div>
+                  <div class="stat-label">Blagie</div>
+                  <div class="stat-value" id="bless">0</div>
+                </div>
+                <div class="resource-row">
+                  <div class="resource-icon"></div>
+                  <div style="font-size:11px; opacity:0.8;">Core resource</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-controls">
+            <button id="gatherBtn" class="btn-main">
+              <span class="label">Gather resources</span>
+              <span class="sub">Basic income, scales with research</span>
+            </button>
+            <button id="huntBtn" class="btn-main">
+              <span class="label">Hunt monster</span>
+              <span class="sub">Random gain, small risk profile</span>
+            </button>
+            <button id="eventBtn" class="btn-main" disabled>
+              <span class="label">Event</span>
+              <span class="sub">High variance, requires Blagie</span>
+            </button>
+            <button id="researchBtn" class="btn-main" disabled>
+              <span class="label">Research</span>
+              <span class="sub">Permanent bonus to gathering</span>
+            </button>
+            <button id="upgradeBtn" class="btn-main btn-upgrade" disabled>
+              <span class="label">Upgrade castle</span>
+              <span class="sub">Cost: 20 Blagie · Unlocks progression</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="log-panel">
+          <div class="log-header">Log</div>
+          <div id="log"></div>
+        </div>
+        <div class="hint-panel">
+          <strong>Prototype logic:</strong> gather → research → events → upgrade.  
+          No timers, no server, pure local deterministic loop for analysis and tuning.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let castleLevel = 1;
+    let bless = 0;
+    let researchBonus = 0;
+
+    const castleLevelSpan = document.getElementById("castleLevel");
+    const blessSpan = document.getElementById("bless");
+    const logDiv = document.getElementById("log");
+
+    const gatherBtn = document.getElementById("gatherBtn");
+    const huntBtn = document.getElementById("huntBtn");
+    const researchBtn = document.getElementById("researchBtn");
+    const eventBtn = document.getElementById("eventBtn");
+    const upgradeBtn = document.getElementById("upgradeBtn");
+
+    function log(text) {
+      logDiv.textContent += text + "\n";
+      logDiv.scrollTop = logDiv.scrollHeight;
+    }
+
+    function updateUI() {
+      castleLevelSpan.textContent = castleLevel;
+      blessSpan.textContent = bless;
+
+      researchBtn.disabled = bless < 10;
+      eventBtn.disabled = bless < 5;
+      upgradeBtn.disabled = bless < 20;
+    }
+
+    gatherBtn.onclick = () => {
+      const gained = 1 + researchBonus;
+      bless += gained;
+      log(`You gathered ${gained} Blagie.`);
+      updateUI();
+    };
+
+    huntBtn.onclick = () => {
+      const gained = Math.floor(Math.random() * 3) + 1;
+      bless += gained;
+      log(`You defeated a monster and gained ${gained} Blagie.`);
+      updateUI();
+    };
+
+    researchBtn.onclick = () => {
+      bless -= 10;
+      researchBonus++;
+      log(`Research completed. Gather bonus: +${researchBonus}.`);
+      updateUI();
+    };
+
+    eventBtn.onclick = () => {
+      bless -= 5;
+      const outcome = Math.random();
+      if (outcome < 0.5) {
+        bless += 15;
+        log("Event success! You gained 15 Blagie.");
+      } else {
+        log("Event had no effect.");
+      }
+      updateUI();
+    };
+
+    upgradeBtn.onclick = () => {
+      bless -= 20;
+      castleLevel++;
+      log(`Castle upgraded! New level: ${castleLevel}.`);
+      updateUI();
+    };
+
+    updateUI();
+  </script> <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDw9XjJKPoeLMqw7LvGuG7clYHy1IzeZNw",
+    authDomain: "blagie-test.firebaseapp.com",
+    projectId: "blagie-test",
+    storageBucket: "blagie-test.firebasestorage.app",
+    messagingSenderId: "625731623902",
+    appId: "1:625731623902:web:ec7a08784473e10d265b4f",
+    measurementId: "G-5BD3V6EWGX"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</body>
+</html>
