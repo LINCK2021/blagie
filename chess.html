@@ -218,6 +218,54 @@
         pointer-events: none;
       }
 
+      .difficulty {
+        width: min(100%, 700px);
+        margin: 18px auto 0;
+        padding: 0;
+        border: 0;
+      }
+
+      .difficulty legend {
+        margin: 0 0 9px;
+        padding: 0;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
+      }
+
+      .difficulty-options {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .difficulty-button {
+        appearance: none;
+        min-height: 42px;
+        border: 1px solid var(--line);
+        border-radius: 2px;
+        padding: 9px 8px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+      }
+
+      .difficulty-button:hover,
+      .difficulty-button:focus-visible {
+        border-color: rgba(232, 198, 118, 0.55);
+        color: var(--ink);
+        outline: none;
+      }
+
+      .difficulty-button[aria-pressed="true"] {
+        border-color: var(--accent);
+        background: rgba(232, 198, 118, 0.14);
+        color: var(--accent-bright);
+      }
+
       .board-grid {
         display: grid;
         grid-template-columns: clamp(20px, 3.2vw, 31px) minmax(0, 1fr) clamp(20px, 3.2vw, 31px);
@@ -460,6 +508,15 @@
               <div class="coordinates files files-bottom" aria-hidden="true"></div>
             </div>
           </div>
+
+          <fieldset class="difficulty">
+            <legend>Сложность</legend>
+            <div class="difficulty-options" role="group" aria-label="Выберите уровень сложности">
+              <button class="difficulty-button" type="button" data-difficulty="beginner" aria-pressed="true">Новичок</button>
+              <button class="difficulty-button" type="button" data-difficulty="amateur" aria-pressed="false">Любитель</button>
+              <button class="difficulty-button" type="button" data-difficulty="strong" aria-pressed="false">Сильный</button>
+            </div>
+          </fieldset>
         </section>
 
       </div>
@@ -482,6 +539,7 @@
         var newGameButton = document.getElementById("newGame");
         var promotionLayer = document.getElementById("promotion");
         var promotionOptions = document.getElementById("promotionOptions");
+        var difficultyButtons = document.querySelectorAll(".difficulty-button");
         var files = ["a", "b", "c", "d", "e", "f", "g", "h"];
         var pieceArt = {
           king: '<path class="main" d="M44 8h12v11h10v11H56v8c12 3 20 14 20 28 0 8-3 14-8 18H32c-5-4-8-10-8-18 0-14 8-25 20-28v-8H34V19h10Z"/><path class="deep" d="M28 70h44l-4 14H32Z"/><path class="highlight" d="M39 44c-5 5-8 12-8 20h8c0-8 3-14 8-18Z"/><path class="accent" d="M32 68h36M34 78h32"/>',
@@ -493,6 +551,12 @@
         };
         var names = { king: "король", queen: "ферзь", rook: "ладья", bishop: "слон", knight: "конь", pawn: "пешка" };
         var pieceValues = { pawn: 100, knight: 320, bishop: 330, rook: 500, queen: 900, king: 20000 };
+        var difficultyProfiles = {
+          beginner: { blunder: 0.22, variation: 75, danger: 0.62, topPool: 0.48, searchReply: false },
+          amateur: { blunder: 0.10, variation: 40, danger: 0.85, topPool: 0.30, searchReply: false },
+          strong: { blunder: 0, variation: 15, danger: 1, topPool: 0.10, searchReply: true }
+        };
+        var currentDifficulty = "beginner";
         var state;
         var computerTimer = null;
 
@@ -769,44 +833,52 @@
           var candidates = allLegalMovesFor(state.board,"black",state.enPassant);
           if (!candidates.length) return null;
 
-          /* OH plays like a beginner: it notices immediate captures and checks,
-             but does not calculate a full reply tree. Wide random variation and
-             occasional deliberately careless choices make pieces blunderable. */
+          var profile = difficultyProfiles[currentDifficulty];
+          var currentEvaluation = evaluateBoard(state.board);
           var scored = candidates.map(function (candidate) {
             var beforeTarget = state.board[candidate.move.r][candidate.move.c];
             var movingBefore = state.board[candidate.fromR][candidate.fromC];
             var afterBlack = cloneBoard(state.board);
             applyToBoard(afterBlack,candidate.fromR,candidate.fromC,candidate.move,candidate.move.promotion ? "queen" : null);
 
-            var score = Math.random() * 150 - 75;
+            var score = Math.random() * profile.variation * 2 - profile.variation;
             if (beforeTarget) score += pieceValues[beforeTarget.type] * 0.55;
             if (candidate.move.promotion) score += 360;
             if (candidate.move.castle) score += 34;
             if (isInCheck(afterBlack,"white")) score += 42;
 
             var destinationAttacked = isSquareAttacked(afterBlack,candidate.move.r,candidate.move.c,"white");
-            if (destinationAttacked) {
-              /* A novice often overlooks a hanging piece, so the danger penalty
-                 is intentionally weak and is ignored on some turns. */
-              var noticesDanger = Math.random() < 0.62;
-              if (noticesDanger) score -= pieceValues[movingBefore.type] * 0.42;
+            if (destinationAttacked && Math.random() < profile.danger) {
+              score -= pieceValues[movingBefore.type] * 0.42;
+            }
+
+            if (profile.searchReply) {
+              var replyEnPassant = nextEnPassant(candidate.fromR,candidate.move,"black");
+              var replies = allLegalMovesFor(afterBlack,"white",replyEnPassant);
+              if (!replies.length && isInCheck(afterBlack,"white")) {
+                score += 100000;
+              } else if (replies.length) {
+                var bestWhiteReply = Infinity;
+                for (var i = 0; i < replies.length; i++) {
+                  var afterReply = cloneBoard(afterBlack);
+                  applyToBoard(afterReply,replies[i].fromR,replies[i].fromC,replies[i].move,replies[i].move.promotion ? "queen" : null);
+                  bestWhiteReply = Math.min(bestWhiteReply,evaluateBoard(afterReply));
+                }
+                score += bestWhiteReply - currentEvaluation;
+              }
             }
 
             return { candidate: candidate, score: score, hangsPiece: destinationAttacked && movingBefore.type !== "pawn" };
           });
 
-          /* About one move in five is a plain oversight. Prefer an available
-             hanging-piece move for that mistake; otherwise choose any legal move. */
-          if (Math.random() < 0.22) {
+          if (profile.blunder && Math.random() < profile.blunder) {
             var blunders = scored.filter(function (entry) { return entry.hangsPiece; });
             var carelessPool = blunders.length ? blunders : scored;
             return carelessPool[Math.floor(Math.random() * carelessPool.length)].candidate;
           }
 
           scored.sort(function (a,b) { return b.score - a.score; });
-          /* Pick from a broad top half rather than always taking the best move.
-             This keeps play plausible while staying beatable for an average player. */
-          var poolSize = Math.max(2,Math.ceil(scored.length * 0.48));
+          var poolSize = Math.max(1,Math.ceil(scored.length * profile.topPool));
           var pick = Math.floor(Math.pow(Math.random(),1.35) * poolSize);
           return scored[pick].candidate;
         }
@@ -960,6 +1032,14 @@
         }
 
         newGameButton.addEventListener("click",resetGame);
+        difficultyButtons.forEach(function (button) {
+          button.addEventListener("click",function () {
+            currentDifficulty = button.dataset.difficulty;
+            difficultyButtons.forEach(function (item) {
+              item.setAttribute("aria-pressed",item === button ? "true" : "false");
+            });
+          });
+        });
         renderCoordinates();
         resetGame();
       })();
