@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Loloikiss — Natalya Rustembekova</title>
 <meta property="og:title" content="Loloikiss — Natalya Rustembekova">
-<meta property="og:description" content="A story by Natalya Rustembekova">
+<meta property="og:description" content="A story by Natalya Rustembekova / История Натальи Рустембековой">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body { height:100%; }
@@ -15,36 +15,50 @@
     display:flex; flex-direction:column; align-items:center;
     min-height:100vh; padding:24px 16px;
   }
+  .topbar { width:100%; max-width:620px; display:flex; justify-content:flex-end; margin-bottom:8px; }
+  .langsw { display:flex; border:1px solid #c9a227; border-radius:2px; overflow:hidden; font-family:Arial,sans-serif; font-size:13px; }
+  .langsw button { background:transparent; border:none; color:#c9a227; padding:8px 16px; cursor:pointer; letter-spacing:1px; }
+  .langsw button.on { background:#c9a227; color:#0d0d0f; }
   .book { width:100%; max-width:620px; flex:1; display:flex; flex-direction:column; }
   .page { display:none; flex:1; }
-  .page.active { display:flex; flex-direction:column; justify-content:center; animation:fade .35s ease; }
+  body[data-lang="ru"] .page.lang-ru.active,
+  body[data-lang="en"] .page.lang-en.active { display:flex; flex-direction:column; justify-content:center; animation:fade .35s ease; }
   @keyframes fade { from { opacity:0; transform:translateX(14px);} to { opacity:1; transform:none;} }
   .page-inner p { margin:0 0 0.9em; line-height:1.75; font-size:17px; text-align:left; }
   .pagenum { margin-top:2em; text-align:center; color:#8a7a4e; font-size:13px; letter-spacing:2px; }
   .cover-inner { text-align:center; }
-  .cover-brand { color:#c9a227; letter-spacing:6px; font-size:12px; margin-bottom:28px; font-family: Arial, sans-serif; }
+  .cover-brand { color:#c9a227; letter-spacing:6px; font-size:12px; margin-bottom:28px; font-family:Arial,sans-serif; }
   .cover-title { font-size:52px; font-weight:normal; color:#f2ead6; margin-bottom:18px; }
   .cover-rule { width:64px; height:1px; background:#c9a227; margin:0 auto 18px; }
   .cover-author { color:#9a917e; font-size:16px; font-style:italic; margin-bottom:60px; }
-  .cover-hint { color:#6b6353; font-size:13px; font-family: Arial, sans-serif; }
+  .cover-hint { color:#6b6353; font-size:13px; font-family:Arial,sans-serif; }
   .nav { display:flex; gap:12px; margin-top:28px; align-items:center; }
   .nav button {
     background:transparent; border:1px solid #c9a227; color:#c9a227;
-    font-family: Arial, sans-serif; font-size:14px; letter-spacing:1px;
+    font-family:Arial,sans-serif; font-size:14px; letter-spacing:1px;
     padding:10px 22px; cursor:pointer; border-radius:2px;
   }
   .nav button:hover { background:#c9a227; color:#0d0d0f; }
   .nav button:disabled { opacity:.25; cursor:default; }
   .nav button:disabled:hover { background:transparent; color:#c9a227; }
-  .counter { color:#8a7a4e; font-size:13px; font-family: Arial, sans-serif; min-width:70px; text-align:center; }
-  .back { margin-top:22px; }
-  .back a { color:#6b6353; font-family: Arial, sans-serif; font-size:13px; text-decoration:none; border-bottom:1px solid #3a352b; }
-  .back a:hover { color:#c9a227; border-color:#c9a227; }
+  .counter { color:#8a7a4e; font-size:13px; font-family:Arial,sans-serif; min-width:70px; text-align:center; }
+  .back { margin-top:26px; }
+  .back a {
+    display:inline-block; background:#c9a227; color:#0d0d0f;
+    font-family:Arial,sans-serif; font-size:14px; letter-spacing:1px;
+    padding:12px 30px; text-decoration:none; border-radius:2px; font-weight:bold;
+  }
+  .back a:hover { background:#e0bc3f; }
 </style>
 </head>
-<body>
+<body data-lang="ru">
+<div class="topbar">
+  <div class="langsw">
+    <button id="btn-ru" class="on">RU</button><button id="btn-en">EN</button>
+  </div>
+</div>
 <div class="book" id="book">
-<section class="page cover active">
+<section class="page cover lang-ru">
 <div class="cover-inner">
 <div class="cover-brand">CAPTURED PRESENCE</div>
 <h1 class="cover-title">Loloikiss</h1>
@@ -53,7 +67,7 @@
 <div class="cover-hint">листайте &rarr;</div>
 </div>
 </section>
-<section class="page" data-page="1">
+<section class="page lang-ru" data-page="1">
 <div class="page-inner">
 <p>Дождь шёл уже третий день.</p>
 <p>Город за окном растворялся в серой воде, словно кто-то медленно стирал его ластиком. Небоскрёбы теряли очертания. Кирпичные башни превращались в тени. Даже свет в окнах казался тусклее, словно электричество устало освещать эту бесконечную человеческую комедию.</p>
@@ -64,7 +78,7 @@
 <div class="pagenum">1 / 12</div>
 </div>
 </section>
-<section class="page" data-page="2">
+<section class="page lang-ru" data-page="2">
 <div class="page-inner">
 <p>Стопки поднимались на столе, на подоконнике, на полу, в коробках, в шкафах, в пластиковых контейнерах. Медицинские записи. Судебные документы. Иммиграционные документы. Банковские выписки. Уведомления. Жалобы. Ответы на жалобы. Ответы на ответы. Объяснения к объяснениям.</p>
 <p>Десять лет жизни.</p>
@@ -76,7 +90,7 @@
 <div class="pagenum">2 / 12</div>
 </div>
 </section>
-<section class="page" data-page="3">
+<section class="page lang-ru" data-page="3">
 <div class="page-inner">
 <p>Где-то инвалидность признавали.</p>
 <p>Где-то утверждали, что ей нужен врач.</p>
@@ -90,7 +104,7 @@
 <div class="pagenum">3 / 12</div>
 </div>
 </section>
-<section class="page" data-page="4">
+<section class="page lang-ru" data-page="4">
 <div class="page-inner">
 <p>Когда-то ей казалось, что если собрать достаточно документов, система поймёт ошибку.</p>
 <p>Потом ей казалось, что если написать достаточно жалоб, кто-нибудь обратит внимание.</p>
@@ -104,7 +118,7 @@
 <div class="pagenum">4 / 12</div>
 </div>
 </section>
-<section class="page" data-page="5">
+<section class="page lang-ru" data-page="5">
 <div class="page-inner">
 <p>Это открытие оказалось гораздо тяжелее любого отказа.</p>
 <p>Отказ хотя бы означает, что кто-то прочитал письмо.</p>
@@ -125,7 +139,7 @@
 <div class="pagenum">5 / 12</div>
 </div>
 </section>
-<section class="page" data-page="6">
+<section class="page lang-ru" data-page="6">
 <div class="page-inner">
 <p>Она сидела и смотрела на эту запись минут десять.</p>
 <p>Заболевание, разрушившее её детство, внезапно возникло через сорок лет после своего начала.</p>
@@ -142,7 +156,7 @@
 <div class="pagenum">6 / 12</div>
 </div>
 </section>
-<section class="page" data-page="7">
+<section class="page lang-ru" data-page="7">
 <div class="page-inner">
 <p>Гораздо страшнее понимать, что всё происходит автоматически.</p>
 <p>Без злого умысла.</p>
@@ -163,7 +177,7 @@
 <div class="pagenum">7 / 12</div>
 </div>
 </section>
-<section class="page" data-page="8">
+<section class="page lang-ru" data-page="8">
 <div class="page-inner">
 <p>Каждая новая справка требовала новую справку.</p>
 <p>Каждый новый ответ создавал два новых вопроса.</p>
@@ -182,7 +196,7 @@
 <div class="pagenum">8 / 12</div>
 </div>
 </section>
-<section class="page" data-page="9">
+<section class="page lang-ru" data-page="9">
 <div class="page-inner">
 <p>Все сайты подтверждали это.</p>
 <p>Все системы подтверждали это.</p>
@@ -202,7 +216,7 @@
 <div class="pagenum">9 / 12</div>
 </div>
 </section>
-<section class="page" data-page="10">
+<section class="page lang-ru" data-page="10">
 <div class="page-inner">
 <p>И рассмеялась.</p>
 <p>Не потому что было смешно.</p>
@@ -219,7 +233,7 @@
 <div class="pagenum">10 / 12</div>
 </div>
 </section>
-<section class="page" data-page="11">
+<section class="page lang-ru" data-page="11">
 <div class="page-inner">
 <p>А на тринадцатом этаже сидела loloikiss и впервые за много лет понимала происходящее кристально ясно.</p>
 <p>Проблема никогда не заключалась в документах.</p>
@@ -235,32 +249,248 @@
 <div class="pagenum">11 / 12</div>
 </div>
 </section>
-<section class="page" data-page="12">
+<section class="page lang-ru" data-page="12">
 <div class="page-inner">
 <p>И человек, который однажды понял, что архив растёт намного быстрее, чем появляется надежда.</p>
 <div class="pagenum">12 / 12</div>
 </div>
 </section>
+<section class="page cover lang-en">
+<div class="cover-inner">
+<div class="cover-brand">CAPTURED PRESENCE</div>
+<h1 class="cover-title">Loloikiss</h1>
+<div class="cover-rule"></div>
+<div class="cover-author">Natalya Rustembekova</div>
+<div class="cover-hint">swipe &rarr;</div>
+</div>
+</section>
+<section class="page lang-en" data-page="1">
+<div class="page-inner">
+<p>The rain had been falling for three days.</p>
+<p>The city outside the window dissolved into grey water, as if someone were slowly erasing it with an eraser. Skyscrapers lost their outlines. Brick towers turned into shadows. Even the light in the windows seemed dimmer, as if electricity had grown tired of lighting this endless human comedy.</p>
+<p>On the thirteenth floor sat loloikiss.</p>
+<p>Papers lay before her.</p>
+<p>Many papers.</p>
+<p>Too many.</p>
+<div class="pagenum">1 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="2">
+<div class="page-inner">
+<p>Stacks rose on the desk, on the windowsill, on the floor, in boxes, in closets, in plastic containers. Medical records. Court documents. Immigration papers. Bank statements. Notices. Complaints. Replies to complaints. Replies to replies. Explanations to explanations.</p>
+<p>Ten years of life.</p>
+<p>Ten years of correspondence with systems.</p>
+<p>Ten years of trying to prove the obvious.</p>
+<p>Every page carried her name.</p>
+<p>And almost every page carried an error.</p>
+<div class="pagenum">2 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="3">
+<div class="page-inner">
+<p>Somewhere she was called a person without a disability.</p>
+<p>Somewhere the disability was acknowledged.</p>
+<p>Somewhere it was claimed she needed a doctor.</p>
+<p>Somewhere doctors did not exist at all.</p>
+<p>Somewhere she had one case number.</p>
+<p>Somewhere another.</p>
+<p>Sometimes it seemed to her that the state was like a huge house with a million rooms, where every door led to a dead end, and the people inside kept forwarding each other in circles.</p>
+<p>She had long stopped being angry.</p>
+<div class="pagenum">3 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="4">
+<div class="page-inner">
+<p>After a certain age, anger runs out.</p>
+<p>Only tiredness remains.</p>
+<p>Once it seemed to her that if she gathered enough documents, the system would see the error.</p>
+<p>Then it seemed to her that if she wrote enough complaints, someone would pay attention.</p>
+<p>Then she thought that if she turned to a higher official, everything would be resolved.</p>
+<p>Then higher still.</p>
+<p>Then higher.</p>
+<p>Then came the moment when she understood a terrible thing.</p>
+<p>The problem was not that she was misunderstood.</p>
+<div class="pagenum">4 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="5">
+<div class="page-inner">
+<p>The problem was that she was understood perfectly.</p>
+<p>It was just that no one cared.</p>
+<p>This discovery turned out to be far heavier than any refusal.</p>
+<p>A refusal at least means someone read the letter.</p>
+<p>But here the letters were read.</p>
+<p>They nodded.</p>
+<p>They agreed.</p>
+<p>They even sympathized sometimes.</p>
+<p>And then they sent her to the next office.</p>
+<p>The next organization.</p>
+<p>The next form.</p>
+<p>The next portal.</p>
+<p>The next line.</p>
+<p>The next wait.</p>
+<p>The next hope.</p>
+<p>Only to do the same thing all over again.</p>
+<div class="pagenum">5 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="6">
+<div class="page-inner">
+<p>She remembered one of the old medical charts.</p>
+<p>It said that polio had begun in 2018.</p>
+<p>She sat and stared at that entry for ten minutes.</p>
+<p>The disease that had destroyed her childhood had suddenly appeared forty years after it began.</p>
+<p>Someone had entered the line.</p>
+<p>Someone had saved the file.</p>
+<p>Someone had confirmed the entry.</p>
+<p>Someone had used it further.</p>
+<p>And it never occurred to anyone that this was impossible.</p>
+<p>Because no one was thinking.</p>
+<p>Everyone performed their own small function.</p>
+<div class="pagenum">6 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="7">
+<div class="page-inner">
+<p>The system never makes mistakes on purpose.</p>
+<p>That was another unpleasant discovery.</p>
+<p>It would have been easier to believe in a conspiracy.</p>
+<p>It is far more frightening to understand that everything happens automatically.</p>
+<p>Without malice.</p>
+<p>Without personal hatred.</p>
+<p>Simply because no one cares.</p>
+<p>Outside the window, someone was playing football in the rain.</p>
+<p>Somewhere at the neighbors&#x27;, music was playing loudly.</p>
+<p>An elderly woman was singing along.</p>
+<p>Off-key.</p>
+<p>Loudly.</p>
+<p>Happily.</p>
+<p>Life went on.</p>
+<div class="pagenum">7 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="8">
+<div class="page-inner">
+<p>Just not where the papers lay.</p>
+<p>Papers did not live.</p>
+<p>They multiplied.</p>
+<p>Every new document gave birth to two more.</p>
+<p>Every new confirmation required a confirmation of the confirmation.</p>
+<p>Every new certificate required a new certificate.</p>
+<p>Every new answer created two new questions.</p>
+<p>Sometimes it seemed to loloikiss that the documents resembled a tumor.</p>
+<p>They grew on their own.</p>
+<p>They fed on her time.</p>
+<p>Her attention.</p>
+<p>Her strength.</p>
+<p>Her health.</p>
+<p>And resolved nothing.</p>
+<div class="pagenum">8 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="9">
+<div class="page-inner">
+<p>The most frightening thing was not even that.</p>
+<p>The most frightening thing was that her rights truly existed.</p>
+<p>All the documents confirmed it.</p>
+<p>All the laws confirmed it.</p>
+<p>All the instructions confirmed it.</p>
+<p>All the websites confirmed it.</p>
+<p>All the systems confirmed it.</p>
+<p>The right existed.</p>
+<p>The help did not exist.</p>
+<p>She smiled at this thought.</p>
+<p>It came out almost philosophical.</p>
+<p>In the world there is an incredible number of ways to acknowledge a problem.</p>
+<p>And almost no way to solve it.</p>
+<div class="pagenum">9 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="10">
+<div class="page-inner">
+<p>On the desk lay a notice.</p>
+<p>One of many.</p>
+<p>It once again stated that there was no person with a disability in the household.</p>
+<p>She looked at her wheelchair.</p>
+<p>Then at the paper.</p>
+<p>Then at the wheelchair again.</p>
+<p>Then at the paper again.</p>
+<p>And laughed.</p>
+<p>Not because it was funny.</p>
+<p>Because sometimes it is the only available form of sanity.</p>
+<p>Dusk was gathering over the city.</p>
+<p>The towers gradually lit up with windows.</p>
+<p>The rain kept falling.</p>
+<p>Somewhere far away, another official was answering another letter.</p>
+<div class="pagenum">10 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="11">
+<div class="page-inner">
+<p>Somewhere another system was generating another automatic reply.</p>
+<p>Somewhere another case number was being created.</p>
+<p>Another application number.</p>
+<p>Another appeal number.</p>
+<p>Another human number.</p>
+<p>And on the thirteenth floor sat loloikiss, and for the first time in many years she understood what was happening with crystal clarity.</p>
+<p>The problem had never been the documents.</p>
+<p>Nor the laws.</p>
+<p>Nor the forms.</p>
+<p>The problem was that the system had not been created to help.</p>
+<div class="pagenum">11 / 12</div>
+</div>
+</section>
+<section class="page lang-en" data-page="12">
+<div class="page-inner">
+<p>It had been created to exist for its own sake.</p>
+<p>And so this story had no hero.</p>
+<p>No villain.</p>
+<p>No savior.</p>
+<p>No happy ending.</p>
+<p>There was only the endless archive.</p>
+<p>And the human being who one day understood that the archive was growing far faster than hope was appearing.</p>
+<div class="pagenum">12 / 12</div>
+</div>
+</section>
 </div>
 <div class="nav">
-  <button id="prev">&larr; Назад</button>
+  <button id="prev">&larr; <span data-t="back">Назад</span></button>
   <div class="counter" id="counter"></div>
-  <button id="next">Вперёд &rarr;</button>
+  <button id="next"><span data-t="fwd">Вперёд</span> &rarr;</button>
 </div>
-<div class="back"><a href="https://sites.google.com/view/natalyarustembekova/block">&larr; Back to website</a></div>
+<div class="back"><a id="backbtn" href="https://sites.google.com/view/natalyarustembekova/block">&larr; Back to website</a></div>
 <script>
 (function(){
-  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
-  var idx = 0, total = pages.length;
-  var prev = document.getElementById('prev'), next = document.getElementById('next'), counter = document.getElementById('counter');
+  var T = {
+    ru: { back:'Назад', fwd:'Вперёд', cover:'обложка', backsite:'\u2190 На сайт', hint:'' },
+    en: { back:'Back', fwd:'Forward', cover:'cover', backsite:'\u2190 Back to website', hint:'' }
+  };
+  var lang = 'ru', idx = 0;
+  var prev = document.getElementById('prev'), next = document.getElementById('next'),
+      counter = document.getElementById('counter'),
+      btnRu = document.getElementById('btn-ru'), btnEn = document.getElementById('btn-en'),
+      backbtn = document.getElementById('backbtn');
+  function pages(){ return Array.prototype.slice.call(document.querySelectorAll('.page.lang-'+lang)); }
+  function total(){ return pages().length - 1; }
   function show(i){
-    idx = Math.max(0, Math.min(total-1, i));
-    pages.forEach(function(p, k){ p.classList.toggle('active', k===idx); });
+    var ps = pages();
+    idx = Math.max(0, Math.min(ps.length-1, i));
+    Array.prototype.forEach.call(document.querySelectorAll('.page'), function(p){ p.classList.remove('active'); });
+    ps[idx].classList.add('active');
+    document.body.setAttribute('data-lang', lang);
     prev.disabled = (idx===0);
-    next.disabled = (idx===total-1);
-    counter.textContent = (idx===0) ? 'обложка' : idx + ' / ' + (total-1);
+    next.disabled = (idx===ps.length-1);
+    prev.querySelector('span').textContent = T[lang].back;
+    next.querySelector('span').textContent = T[lang].fwd;
+    counter.textContent = (idx===0) ? T[lang].cover : idx + ' / ' + total();
+    backbtn.innerHTML = T[lang].backsite;
     window.scrollTo(0,0);
   }
+  function setLang(l){ lang = l; idx = 0;
+    btnRu.classList.toggle('on', l==='ru'); btnEn.classList.toggle('on', l==='en');
+    document.documentElement.lang = l; show(0); }
+  btnRu.onclick = function(){ setLang('ru'); };
+  btnEn.onclick = function(){ setLang('en'); };
   prev.onclick = function(){ show(idx-1); };
   next.onclick = function(){ show(idx+1); };
   document.addEventListener('keydown', function(e){
